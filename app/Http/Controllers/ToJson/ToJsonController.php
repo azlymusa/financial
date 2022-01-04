@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\ToJson;
 
 use App\Http\Controllers\Controller;
+use App\Loan;
 use Illuminate\Http\Request;
 use Auth;
 use Validator;
@@ -30,6 +31,20 @@ class ToJsonController extends Controller
         return response()->json($getCommitment);
     }
 
+    public function LoantList(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|integer|exists:loans,id'
+        ]);
+
+        if ($validator->fails()) {
+            return response($validator->errors(), 400);
+        }
+
+        $data = Loan::where('user_id', auth()->user()->id)->findOrFail($request->id);
+        return response()->json($data);
+    }
+
     public function overviewDashboard(){
         $totalDay = Carbon::now()->daysInMonth;
         $day = [];
@@ -43,7 +58,7 @@ class ToJsonController extends Controller
                             $query->where('master', 2);
                         })
                 )->whereDay('created_at', $i)->whereMonth('created_at', Carbon::now()->month)->where('user_id', Auth::user()->id)->sum('log_rm');
-        
+
                 $logExpenses = QueryBuilder::for(
                     TransactionLogs::with('lookup')
                         ->wherehas('lookup', function($query){

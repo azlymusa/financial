@@ -62,6 +62,11 @@
             </a>
           </li>
             <li class="nav-item">
+                <a class="nav-link " href="{{ route('loan.index') }}">
+                    <i class="fas fa-piggy-bank text-success"></i> Loan
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link " href="{{ route('transaction.transactionOutForm') }}">
                     <i class="fas fa-money-bill text-primary"></i> Expenses
                 </a>
@@ -81,11 +86,11 @@
               <i class="ni ni-chart-bar-32 text-blue"></i> Summary
             </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link " href="{{ route('report.index') }}">
-              <i class="ni ni-shop text-blue"></i>Report
-            </a>
-          </li>
+{{--          <li class="nav-item">--}}
+{{--            <a class="nav-link " href="{{ route('report.index') }}">--}}
+{{--              <i class="ni ni-shop text-blue"></i>Report--}}
+{{--            </a>--}}
+{{--          </li>--}}
         </ul>
         <!-- Divider -->
         <hr class="my-3">

@@ -16,7 +16,7 @@ class Lookups extends Model
 {
     /**
      * The "type" of the auto-incrementing ID.
-     * 
+     *
      * @var string
      */
     protected $keyType = 'integer';
@@ -27,8 +27,8 @@ class Lookups extends Model
     protected $fillable = ['kod', 'title', 'master', 'created_at', 'updated_at'];
 
     public function getMaster(){
-        return ($this->master == null) 
-            ? $this->id 
+        return ($this->master == null)
+            ? $this->id
             : $this->master;
     }
 
@@ -38,6 +38,10 @@ class Lookups extends Model
 
     public function scopeByExpensesList(Builder $query){
         return $query->where('master', 3);
+    }
+
+    public function scopeByLoan(Builder $query){
+        return $query->where('master', 4);
     }
 
 }

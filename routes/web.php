@@ -54,6 +54,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/summary', 'Summary\SummaryController@index')->name('summary.index');
 
     //toJson
+
+    Route::post('/tojson/LoantList', 'ToJson\ToJsonController@LoantList')->name('LoantList');
     Route::post('/tojson/commitmentList', 'ToJson\ToJsonController@commitmentList')->name('commitmentList');
     Route::get('/tojson/overviewDashboard', 'ToJson\ToJsonController@overviewDashboard')->name('overviewDashboard');
     Route::get('/tojson/graphTransactionYear', 'ToJson\ToJsonController@graphTransactionYear')->name('graphTransactionYear');
@@ -61,6 +63,22 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/tojson/chartExpensesDetail', 'ToJson\ToJsonController@chartExpensesDetail')->name('chartExpensesDetail');
     Route::get('/tojson/savingFlow', 'ToJson\ToJsonController@savingFlow')->name('savingFlow');
     Route::get('/tojson/savingAndMoney', 'ToJson\ToJsonController@savingAndMoney')->name('savingAndMoney');
+
+    Route::group([
+        'prefix' => 'loan/',
+        'as' => 'loan.'
+    ], function (){
+        Route::get('', 'Loan\LoanController@index')->name('index');
+        Route::post('', 'Loan\LoanController@store')->name('store');
+        Route::post('update', 'Loan\LoanController@update')->name('update');
+
+
+        Route::post('complete', 'Loan\LoanController@complete')->name('complete');
+        Route::get('list', 'Loan\LoanController@list')->name('list');
+        Route::post('delete', 'Loan\LoanController@delete')->name('delete');
+
+
+    });
 
     Route::group([
         'prefix' => 'report/',
