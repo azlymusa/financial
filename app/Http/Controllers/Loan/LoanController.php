@@ -94,47 +94,52 @@ class LoanController extends Controller
 
     public static function run(){
 
-        $loans = Loan::get();
-
-        $today = Carbon::today();
-
+        $loans    = Loan::where('status', 1)->get();
         $inserted = 0;
 
         foreach ($loans as $loan){
 
-            $check = $loan->logs()
-                ->whereMonth('date', date('m'))
-                ->whereYear('date', date('Y'))
-                ->where('date', '<', $today)
-                ->first();
+            $date =  Carbon::parse(date('Y').'-'.date('m').'-'.$loan->recurring_at);
 
-            #insert dat
-            if(!$check){
+            if($date->isPast()){
+                $check = $loan->logs()
+                    ->whereMonth('date', date('m'))
+                    ->whereYear('date', date('Y'))
+                    ->first();
 
-                $inserted++;
+                #insert dat
+                if(!$check){
 
-                $balance = $loan->balance - $loan->monthly;
-                $balance = ($balance < 0) ? 0 : $balance;
+                    $inserted++;
 
-                $log = new LoanLog();
-                $log->loan_id = $loan->id;
-                $log->date = Carbon::parse(date('Y').'-'.date('m').'-'.$loan->recurring_at);
-                $log->total = $loan->monthly;
-                $loan->balance = $log->balance = $balance;
+                    $balance = $loan->balance - $loan->monthly;
+                    $balance = ($balance < 0) ? 0 : $balance;
 
-                $log->save();
-                $loan->save();
+                    $log           = new LoanLog();
+                    $log->loan_id  = $loan->id;
+                    $log->date     = $date;
+                    $log->total    = $loan->monthly;
+                    $loan->balance = $log->balance = $balance;
 
-                $transaction              = new TransactionLogs;
-                $transaction->user_id     = $loan->user_id;
-                $transaction->log_reason  = $loan->title;
-                $transaction->log_rm      = $loan->monthly;
-                $transaction->kategori_id = 4;
-                $transaction->save();
+                    $log->save();
+                    $loan->save();
+
+                    $transaction              = new TransactionLogs;
+                    $transaction->user_id     = $loan->user_id;
+                    $transaction->log_reason  = $loan->title;
+                    $transaction->log_rm      = $loan->monthly;
+                    $transaction->kategori_id = 4;
+                    $transaction->save();
 
 
-                $cfr = new CashFlowRepository();
-                $cfr->moneyTrigger(false, $loan->monthly,$loan->user_id);
+                    $cfr = new CashFlowRepository();
+                    $cfr->moneyTrigger(false, $loan->monthly,$loan->user_id);
+
+                    if($balance == 0){
+                        $loan->status = 2;
+                        $loan->save();
+                    }
+                }
             }
         }
 
