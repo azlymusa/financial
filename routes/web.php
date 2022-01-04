@@ -76,6 +76,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('complete', 'Loan\LoanController@complete')->name('complete');
         Route::get('list', 'Loan\LoanController@list')->name('list');
         Route::post('delete', 'Loan\LoanController@delete')->name('delete');
+        Route::get('run', 'Loan\LoanController@testRun')->name('run');
+
 
 
     });

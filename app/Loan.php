@@ -26,6 +26,10 @@ class Loan extends Model
         return $this->belongsTo('App\User');
     }
 
+    public function logs(){
+        return $this->hasMany(LoanLog::class, 'loan_id', 'id');
+    }
+
     public function getBalanceStatus(){
         if($this->unlimit == 0){
             return number_format(($this->total - $this->balance) / $this->total * 100, 2);

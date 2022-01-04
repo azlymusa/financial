@@ -5,15 +5,14 @@ use App\UserDetails;
 use App\Commitments;
 
 class CashFlowRepository{
-    public function moneyTrigger($in = true, $amount){
+    public function moneyTrigger($in = true, $amount, $uid = null){
         //if transaction in
+        $money   = UserDetails::where('user_id', $uid ?? auth()->user()->id)->first();
         if($in){
-            $money = UserDetails::find(\Auth::user()->userDetails()->first()->id);
             $money->money = $money->money + $amount;
             $money->save();
         //if transaction out
         } else {
-            $money = UserDetails::find(\Auth::user()->userDetails()->first()->id);
             $money->money = $money->money - $amount;
             $money->save();
         }
@@ -45,12 +44,12 @@ class CashFlowRepository{
             } else {
                 $commitment->total = $commitment->total + $attributes->total;
                 $commitment->save();
-                
+
                 return -1;
             }
-            
-        
 
-        
+
+
+
     }
 }

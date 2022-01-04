@@ -25,6 +25,15 @@ class CreateLoansTable extends Migration
             $table->softDeletes();
             $table->timestamps();
         });
+
+        Schema::create('loan_logs', function (Blueprint $table) {
+            $table->id();
+            $table->date('date');
+            $table->foreignId('loan_id')->constrained();
+            $table->double('total');
+            $table->double('balance');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -34,6 +43,7 @@ class CreateLoansTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('loan_logs');
         Schema::dropIfExists('loans');
     }
 }
